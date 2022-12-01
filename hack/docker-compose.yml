@@ -1,5 +1,7 @@
 version: '3.8'
 
+name: aoc-2022
+
 services:
   hhvm:
     image: hhvm/hhvm:latest
