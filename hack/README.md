@@ -11,7 +11,7 @@ docker compose up -d
 
 You may need to pull the HHVM image first, in which case run:
 ```
-docker pull hhvm/hhhvm:latest
+docker pull hhvm/hhvm:latest
 ```
 
 Then, you can either shell into the container with
