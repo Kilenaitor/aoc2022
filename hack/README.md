@@ -16,7 +16,7 @@ docker pull hhvm/hhvm:latest
 
 Then, you can either shell into the container with
 ```
-docker exec -it hack-hhvm-1 /bin/bash
+docker exec -it aoc-2022-hhvm-1 /bin/bash
 ```
 
 And to then run one of the days, go to the directory
