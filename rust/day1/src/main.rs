@@ -1,6 +1,4 @@
-use anyhow::Result;
-
-fn main() -> Result<()> {
+fn main() {
     let mut calories: Vec<u32> = include_str!("input.txt")
         .split("\n\n")
         .map(|elf| {
@@ -18,6 +16,4 @@ fn main() -> Result<()> {
         "The top three elves have {} total calories",
         calories[0] + calories[1] + calories[2]
     );
-
-    Ok(())
 }
