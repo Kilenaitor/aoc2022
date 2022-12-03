@@ -1,4 +1,4 @@
-use array_tool::vec::Intersect;
+use std::collections::HashSet;
 
 fn main() {
     part1();
@@ -6,26 +6,25 @@ fn main() {
 }
 
 fn part2() {
-    let rucksacks = include_str!("input.txt").split("\n");
-
-    let mut groups = vec![];
-    let mut group = vec![];
-    for rucksack in rucksacks {
-        group.push(rucksack.as_bytes().to_vec());
-        if group.len() == 3 {
-            groups.push(group);
-            group = vec![];
-        }
-    }
-
-    let priorities: u32 = groups.iter().map(|group| get_group_priority(group)).sum();
+    let priorities: u32 = include_str!("input.txt")
+        .split("\n")
+        .collect::<Vec<&str>>()
+        .chunks(3)
+        .map(|chunk| get_chunk_priority(chunk))
+        .sum();
     println!("{}", priorities);
 }
 
-fn get_group_priority(group: &Vec<Vec<u8>>) -> u32 {
-    let common = group[0].clone().intersect(group[1].clone());
-    let shared_letter = common.intersect(group[2].clone());
-    get_priority(shared_letter[0] as char)
+fn get_chunk_priority(group: &[&str]) -> u32 {
+    let shared_letter: char = group
+        .iter()
+        .map(|rucksack| HashSet::from_iter(rucksack.chars()))
+        .reduce(|a: HashSet<char>, b| a.intersection(&b).cloned().collect())
+        .unwrap()
+        .into_iter()
+        .next()
+        .unwrap();
+    get_priority(&shared_letter)
 }
 
 fn part1() {
@@ -38,18 +37,15 @@ fn part1() {
 }
 
 fn get_rucksack_priority(rucksack: &str) -> u32 {
-    let (half1, half2) = split(&rucksack);
-    let common_letter = half1.intersect(half2)[0];
-    get_priority(common_letter as char)
-}
-
-fn split(rucksack: &str) -> (Vec<u8>, Vec<u8>) {
     let (half1, half2) = rucksack.split_at(rucksack.len() / 2);
-    (half1.as_bytes().to_vec(), half2.as_bytes().to_vec())
+    let half1: HashSet<char> = HashSet::from_iter(half1.chars());
+    let half2 = HashSet::from_iter(half2.chars());
+    let shared_letter = half1.intersection(&half2).next().unwrap();
+    get_priority(shared_letter)
 }
 
-fn get_priority(letter: char) -> u32 {
-    let ascii_value = letter as u32;
+fn get_priority(letter: &char) -> u32 {
+    let ascii_value = *letter as u32;
     if ascii_value >= 65 && ascii_value <= 90 {
         ascii_value - 38
     } else if ascii_value >= 97 && ascii_value <= 122 {
